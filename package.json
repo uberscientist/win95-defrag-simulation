@@ -1,0 +1,19 @@
+{
+  "name": "nko3-of-glob",
+  "version": "0.0.0",
+  "description": "of glob",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nko3/of-glob.git"
+  },
+  "dependencies": {
+  },
+  "engines": {
+    "node": "0.8.x"
+  },
+  "subdomain": "of-glob.nko3"
+}
