@@ -17,14 +17,13 @@ $ ->
   clusterW = 7
   clusterH = 9
   i = 0
-  drawer = null
 
   $(window).resize ->
     sizeCanvas()
 
   sizeCanvas = ->
+    if window.drawer then clearInterval window.drawer
     i = 0
-    clearInterval drawer
 
     width = $('#viewer').width()
     height = $('#viewer').height()
@@ -40,22 +39,27 @@ $ ->
     clusterSprite = new Image()
     clusterSprite.src = 'imgs/cluster_sprites.png'
     clusterSprite.onload = ->
-      console.log 'fire'
+      if window.drawer then clearInterval window.drawer
       srcX = 0
       srcY = 0
       clusterX = -5
       clusterY = 0
 
-      drawer = setInterval ->
+      window.drawer = setInterval ->
         width = $('#viewer').width()
         height = $('#viewer').height()
         i++
-        if i * clusterW > (width - 100)
+        if (i * clusterW + 1) > (width - clusterW * 5)
           i = 0
           clusterX = -5
           clusterY += 10
 
+        if clusterY > (height - clusterH)
+          console.log 'clusterY, height', clusterY, height
+          clearInterval window.drawer
+          sizeCanvas()
+
         ctx.drawImage clusterSprite, srcX+clusterW*parseInt(Math.random() * 9), srcY, clusterW, clusterH, clusterX+=8, clusterY, clusterW, clusterH
-      , 10
+      , 1
 
   sizeCanvas()

@@ -17,20 +17,21 @@
   };
 
   $(function() {
-    var canvas, clusterH, clusterW, ctx, drawCluster, drawer, i, sizeCanvas;
+    var canvas, clusterH, clusterW, ctx, drawCluster, i, sizeCanvas;
     canvas = document.getElementById('cluster-canvas');
     ctx = canvas.getContext('2d');
     clusterW = 7;
     clusterH = 9;
     i = 0;
-    drawer = null;
     $(window).resize(function() {
       return sizeCanvas();
     });
     sizeCanvas = function() {
       var height, numCluster, width;
+      if (window.drawer) {
+        clearInterval(window.drawer);
+      }
       i = 0;
-      clearInterval(drawer);
       width = $('#viewer').width();
       height = $('#viewer').height();
       canvas.width = width;
@@ -44,23 +45,30 @@
       clusterSprite.src = 'imgs/cluster_sprites.png';
       return clusterSprite.onload = function() {
         var clusterX, clusterY, srcX, srcY;
-        console.log('fire');
+        if (window.drawer) {
+          clearInterval(window.drawer);
+        }
         srcX = 0;
         srcY = 0;
         clusterX = -5;
         clusterY = 0;
-        return drawer = setInterval(function() {
+        return window.drawer = setInterval(function() {
           var height, width;
           width = $('#viewer').width();
           height = $('#viewer').height();
           i++;
-          if (i * clusterW > (width - 100)) {
+          if ((i * clusterW + 1) > (width - clusterW * 5)) {
             i = 0;
             clusterX = -5;
             clusterY += 10;
           }
+          if (clusterY > (height - clusterH)) {
+            console.log('clusterY, height', clusterY, height);
+            clearInterval(window.drawer);
+            sizeCanvas();
+          }
           return ctx.drawImage(clusterSprite, srcX + clusterW * parseInt(Math.random() * 9), srcY, clusterW, clusterH, clusterX += 8, clusterY, clusterW, clusterH);
-        }, 10);
+        }, 1);
       };
     };
     return sizeCanvas();
