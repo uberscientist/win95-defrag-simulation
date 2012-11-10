@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Defrag Simulator</title>
+    <link rel='stylesheet' type='text/css' href='style.css'>
+  </head>
+  <body>
+    <div id='title-bar'>
+      <img id='title-left' src='imgs/title_left.png'>
+      <img id='title-right' src='imgs/title_right.png'>
+    </div> 
+
+    <div id='viewer'>
+      <div class='cluster beginning'></div>
+      <div class='cluster middle'></div>
+      <div class='cluster end'></div>
+      <div class='cluster optimized'></div>
+      <div class='cluster free'></div>
+      <div class='cluster unmoved'></div>
+      <div class='cluster bad'></div>
+      <div class='cluster read'></div>
+      <div class='cluster write'></div>
+    </div>
+    <div id='preload'>
+      <audio autoplay='autoplay' loop='loop'>
+        <source src='audio/loop.ogg' type='audio/ogg'>
+        <source src='audio/loop.mp3' type='audio/mp3'>
+      </audio>
+    </div>
+  </body>
+</html>
