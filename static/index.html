@@ -3,6 +3,7 @@
   <head>
     <title>Defrag Simulator</title>
     <link rel='stylesheet' type='text/css' href='style.css'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src='defrag.js' type='text/javascript'></script>
   </head>
   <body>
@@ -12,9 +13,10 @@
     </div> 
 
     <div id='viewer'>
+      <canvas id='cluster-canvas'></canvas>
     </div>
     <div id='preload'>
-      <audio autoplay='autoplay' loop='loop'>
+      <audio loop='loop'>
         <source src='audio/loop.ogg' type='audio/ogg'>
         <source src='audio/loop.mp3' type='audio/mp3'>
       </audio>

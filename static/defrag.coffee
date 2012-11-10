@@ -1,5 +1,3 @@
-$ = (id) -> document.getElementById(id)
-
 clusters = []
 clusterSprites =
   0: 'cluster beginning'
@@ -12,27 +10,52 @@ clusterSprites =
   7: 'cluster read'
   8: 'cluster write'
 
-randomize = (previous) ->
-  switch previous
-    when 0 then parseInt(Math.random() * 9)
-    else parseInt(Math.random() * 9)
+$ ->
+  canvas = document.getElementById 'cluster-canvas'
+  ctx = canvas.getContext '2d'
 
-initClusters = ->
-  viewer = $ 'viewer'
-  
-  clusters[0] = 0
-  for i in [1..999]
-    clusters[i] = 3
+  clusterW = 7
+  clusterH = 9
+  i = 0
+  drawer = null
 
-  for cluster in clusters
-    viewer.innerHTML += "<div class='#{clusterSprites[cluster]}'></div>"
+  $(window).resize ->
+    sizeCanvas()
 
-window.onload = ->
-  initClusters()
-  viewer = $ 'viewer'
+  sizeCanvas = ->
+    i = 0
+    clearInterval drawer
 
-  crank = setInterval ->
-    setTimeout ->
-      viewer.innerHTML += "<div class='#{clusterSprites[parseInt(Math.random() * 9)]}'></div>"
-    , Math.random() * 5000
-  , 250
+    width = $('#viewer').width()
+    height = $('#viewer').height()
+
+    canvas.width = width
+    canvas.height = height
+
+    numCluster = Math.round (width/clusterW) * (height/clusterH)
+    
+    drawCluster()
+
+  drawCluster = () ->
+    clusterSprite = new Image()
+    clusterSprite.src = 'imgs/cluster_sprites.png'
+    clusterSprite.onload = ->
+      console.log 'fire'
+      srcX = 0
+      srcY = 0
+      clusterX = -5
+      clusterY = 0
+
+      drawer = setInterval ->
+        width = $('#viewer').width()
+        height = $('#viewer').height()
+        i++
+        if i * clusterW > (width - 100)
+          i = 0
+          clusterX = -5
+          clusterY += 10
+
+        ctx.drawImage clusterSprite, srcX+clusterW*parseInt(Math.random() * 9), srcY, clusterW, clusterH, clusterX+=8, clusterY, clusterW, clusterH
+      , 10
+
+  sizeCanvas()
