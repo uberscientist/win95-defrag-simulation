@@ -1,6 +1,18 @@
 body, html {
+  font-family: "System", sans-serif;
   background-color: green;
   height: 100%;
+}
+
+#header {
+  padding: 10px;
+  color: #fff;
+  font-weight: bold; 
+}
+
+#vote {
+  position: relative;
+  top: 6px;
 }
 
 #title-bar {

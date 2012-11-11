@@ -1,3 +1,4 @@
+window = this
 randInt = (low, high) -> Math.round Math.random() * (high - 1) + low
 
 genHDD = (numCluster) ->
@@ -7,16 +8,16 @@ genHDD = (numCluster) ->
     rnd = randInt(1,600)
     switch rnd
       when 1
-        run = randInt(2,10)
+        run = randInt(1,10)
         val = 1
       when 2
-        run = randInt(2,10)
+        run = randInt(1,10)
         val = 2
       when 4 or 40 or 44
         run = randInt(20, 200)
         val = 4
       when 5
-        run = randInt(1,100)
+        run = randInt(1,10)
         val = 5
       when 6
         run = randInt(5,20)
@@ -40,7 +41,8 @@ $ ->
     resizeCanvas()
 
   resizeCanvas = ->
-    if window.drawer then clearInterval window.drawer
+
+
 
     width = $('#viewer').width()
     height = $('#viewer').height()
@@ -76,26 +78,60 @@ $ ->
 
 
       # Drawing Functions
-      readCluster = ->
-
-      writeCluster = (cluster, index) ->
-        drawCluster(8, index)
+      readCluster = (index) ->
+        hdd[index] = 4
+        drawCluster(7, index)
         setTimeout ->
-          drawCluster(3, index)
+          drawCluster(4, index)
+        , 100
+
+      # Write cluster type to disc
+      writeCluster = (cluster, index) ->
+        drawCluster(8, index) # make it red for write
+        # Then write appropriate cluster
+        setTimeout ->
+          do (cluster, index) ->
+            hdd[index] = cluster
+            drawCluster(cluster, index)
         , 100
 
       animate = (hdd) ->
-        if window.drawer then clearInterval window.drawer
-        index = 0
+        if window.writer or window.reader
+          clearInterval window.writer
+          clearInterval window.reader
 
-        window.drawer = setInterval ->
+        readIndex = Math.floor(hdd.length/2)
+        window.reader = setInterval ->
           setTimeout ->
-            switch hdd[index]
-              when 0
-                writeCluster(3, index)
-            index++
-          , randInt(500, 5000)
-        , 200
+            curCluster = hdd[readIndex]
+            hdLen = hdd.length
+            do (curCluster) ->
+              if writeIndex >= hdLen
+                clearInterval window.reader
+              if curCluster < 3
+                readCluster(readIndex)
+              readIndex++
+          , randInt(0, 1200)
+        , 60
+
+        writeIndex = 0
+        window.writer = setInterval ->
+          setTimeout ->
+            curCluster = hdd[writeIndex]
+            hdLen = hdd.length
+            do (curCluster) ->
+              if writeIndex >= hdLen
+                # Reset after reaching end of data
+                resizeCanvas()
+
+              if curCluster not in [5,6]
+                writeCluster(3, writeIndex)
+                writeIndex++
+
+              else
+                writeIndex++
+          , randInt(0, 1200)
+        , 30
 
       animate(hdd)
 
