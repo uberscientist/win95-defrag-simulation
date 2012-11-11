@@ -1,9 +1,8 @@
 randInt = (low, high) -> Math.round Math.random() * (high - 1) + low
 
 genHDD = (numCluster) ->
-  # 0=middle 1=beginning 2=end 3=optimized 4=free 5=not moved 6=bad 7=read 8=write
-  badRun = 0
-
+  # 0=beginning 1=middle 2=end 3=optimized 4=free 5=not moved 6=bad 7=read 8=write
+  # Generates HDD data
   for i in [0..numCluster]
     rnd = randInt(1,600)
     switch rnd
@@ -36,7 +35,7 @@ $ ->
   clusterW = 9
   clusterH = 11
 
-  #Resize defrag viewer on window resize
+  # Resize defrag viewer on window resize
   $(window).resize ->
     resizeCanvas()
 
@@ -49,11 +48,13 @@ $ ->
     canvas.width = width
     canvas.height = height
 
-    #sizes in clusters
+    # Canvas size in clusters
     rowSize = Math.floor(width/clusterW)
     columnSize = Math.floor(height/clusterH)
 
     numCluster = Math.floor rowSize * columnSize
+
+    # Generate and draw new HD data
     hdd = genHDD(numCluster)
     drawHDD(hdd, rowSize, columnSize, width, height)
 
@@ -63,40 +64,39 @@ $ ->
     clusterSprite.src = 'imgs/cluster_sprites.png'
     clusterSprite.onload = ->
 
+      # Function takes cluster type and index, then draws to canvas
       drawCluster = (cluster, index) ->
         xOffset = (index % rowSize) * clusterW
         yOffset = Math.floor(index / rowSize) * clusterH
-        ctx.drawImage clusterSprite, srcX+clusterW*cluster, srcY, clusterW, clusterH, xOffset, yOffset, clusterW, clusterH
+        ctx.drawImage clusterSprite, clusterW*cluster, 0, clusterW, clusterH, xOffset, yOffset, clusterW, clusterH
 
-      srcX = 0
-      srcY = 0
-      clusterX = -5
-      clusterY = 0
-
+      # Draw the HDD data
       for cluster, i in hdd
         drawCluster(cluster, i)
 
-      ###
-      intervalCluster = ->
+
+      # Drawing Functions
+      readCluster = ->
+
+      writeCluster = (cluster, index) ->
+        drawCluster(8, index)
+        setTimeout ->
+          drawCluster(3, index)
+        , 100
+
+      animate = (hdd) ->
         if window.drawer then clearInterval window.drawer
+        index = 0
 
         window.drawer = setInterval ->
-          width = $('#viewer').width()
-          height = $('#viewer').height()
-          i++
-          if i * (clusterW + 1) > (width - clusterW*2)
-            ctx.drawImage clusterSprite, srcX+clusterW*4, srcY, clusterW, clusterH, clusterX+8, clusterY, clusterW, clusterH
-            i = 0
-            clusterX = -5
-            clusterY += 10
+          setTimeout ->
+            switch hdd[index]
+              when 0
+                writeCluster(3, index)
+            index++
+          , randInt(500, 5000)
+        , 200
 
-          if clusterY > (height/2)
-            resizeCanvas()
-            clearInterval window.drawer
-
-          ctx.drawImage clusterSprite, srcX+clusterW*3, srcY, clusterW, clusterH, clusterX+=8, clusterY, clusterW, clusterH
-          ctx.drawImage clusterSprite, srcX+clusterW*8, srcY, clusterW, clusterH, clusterX+8, clusterY, clusterW, clusterH
-        , 100
-        ###
+      animate(hdd)
 
   resizeCanvas()

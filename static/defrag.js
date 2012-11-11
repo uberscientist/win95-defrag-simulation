@@ -7,8 +7,7 @@
   };
 
   genHDD = function(numCluster) {
-    var badRun, i, rnd, run, val, _i, _results;
-    badRun = 0;
+    var i, rnd, run, val, _i, _results;
     _results = [];
     for (i = _i = 0; 0 <= numCluster ? _i <= numCluster : _i >= numCluster; i = 0 <= numCluster ? ++_i : --_i) {
       rnd = randInt(1, 600);
@@ -72,46 +71,41 @@
       clusterSprite = new Image();
       clusterSprite.src = 'imgs/cluster_sprites.png';
       return clusterSprite.onload = function() {
-        var cluster, clusterX, clusterY, drawCluster, i, srcX, srcY, _i, _len, _results;
+        var animate, cluster, drawCluster, i, readCluster, writeCluster, _i, _len;
         drawCluster = function(cluster, index) {
           var xOffset, yOffset;
           xOffset = (index % rowSize) * clusterW;
           yOffset = Math.floor(index / rowSize) * clusterH;
-          return ctx.drawImage(clusterSprite, srcX + clusterW * cluster, srcY, clusterW, clusterH, xOffset, yOffset, clusterW, clusterH);
+          return ctx.drawImage(clusterSprite, clusterW * cluster, 0, clusterW, clusterH, xOffset, yOffset, clusterW, clusterH);
         };
-        srcX = 0;
-        srcY = 0;
-        clusterX = -5;
-        clusterY = 0;
-        _results = [];
         for (i = _i = 0, _len = hdd.length; _i < _len; i = ++_i) {
           cluster = hdd[i];
-          _results.push(drawCluster(cluster, i));
+          drawCluster(cluster, i);
         }
-        return _results;
-        /*
-              intervalCluster = ->
-                if window.drawer then clearInterval window.drawer
-        
-                window.drawer = setInterval ->
-                  width = $('#viewer').width()
-                  height = $('#viewer').height()
-                  i++
-                  if i * (clusterW + 1) > (width - clusterW*2)
-                    ctx.drawImage clusterSprite, srcX+clusterW*4, srcY, clusterW, clusterH, clusterX+8, clusterY, clusterW, clusterH
-                    i = 0
-                    clusterX = -5
-                    clusterY += 10
-        
-                  if clusterY > (height/2)
-                    resizeCanvas()
-                    clearInterval window.drawer
-        
-                  ctx.drawImage clusterSprite, srcX+clusterW*3, srcY, clusterW, clusterH, clusterX+=8, clusterY, clusterW, clusterH
-                  ctx.drawImage clusterSprite, srcX+clusterW*8, srcY, clusterW, clusterH, clusterX+8, clusterY, clusterW, clusterH
-                , 100
-        */
-
+        readCluster = function() {};
+        writeCluster = function(cluster, index) {
+          drawCluster(8, index);
+          return setTimeout(function() {
+            return drawCluster(3, index);
+          }, 100);
+        };
+        animate = function(hdd) {
+          var index;
+          if (window.drawer) {
+            clearInterval(window.drawer);
+          }
+          index = 0;
+          return window.drawer = setInterval(function() {
+            return setTimeout(function() {
+              switch (hdd[index]) {
+                case 0:
+                  writeCluster(3, index);
+              }
+              return index++;
+            }, randInt(500, 5000));
+          }, 200);
+        };
+        return animate(hdd);
       };
     };
     return resizeCanvas();
