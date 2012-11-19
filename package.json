@@ -1,6 +1,6 @@
 {
   "name": "nko3-of-glob",
-  "version": "0.0.0-2",
+  "version": "0.0.0-3",
   "description": "of glob",
   "main": "server.js",
   "scripts": {

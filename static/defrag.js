@@ -55,7 +55,7 @@
     });
     resizeCanvas = function() {
       var columnSize, hdd, height, numCluster, rowSize, width;
-      width = $('#viewer').width();
+      width = $('#viewer').width() - 30;
       height = $('#viewer').height();
       canvas.width = width;
       canvas.height = height;

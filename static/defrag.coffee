@@ -42,9 +42,7 @@ $ ->
 
   resizeCanvas = ->
 
-
-
-    width = $('#viewer').width()
+    width = $('#viewer').width() - 30
     height = $('#viewer').height()
 
     canvas.width = width
@@ -60,7 +58,6 @@ $ ->
     hdd = genHDD(numCluster)
     drawHDD(hdd, rowSize, columnSize, width, height)
 
-
   drawHDD = (hdd, rowSize, columnSize, width, height) ->
     clusterSprite = new Image()
     clusterSprite.src = 'imgs/cluster_sprites.png'
@@ -75,7 +72,6 @@ $ ->
       # Draw the HDD data
       for cluster, i in hdd
         drawCluster(cluster, i)
-
 
       # Drawing Functions
       readCluster = (index) ->
