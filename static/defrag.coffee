@@ -30,6 +30,7 @@ genHDD = (numCluster) ->
       0
 
 $ ->
+  $("audio")[0].play()
   canvas = document.getElementById 'cluster-canvas'
   ctx = canvas.getContext '2d'
 

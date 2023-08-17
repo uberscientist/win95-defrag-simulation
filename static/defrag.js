@@ -46,6 +46,7 @@
 
   $(function() {
     var canvas, clusterH, clusterW, ctx, drawHDD, resizeCanvas;
+    $("audio")[0].play();
     canvas = document.getElementById('cluster-canvas');
     ctx = canvas.getContext('2d');
     clusterW = 9;
